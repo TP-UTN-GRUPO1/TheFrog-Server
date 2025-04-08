@@ -27,3 +27,4 @@ coverage/
 
 # History plugin
 .history/
+package-lock.json
