@@ -26,5 +26,5 @@ Thumbs.db
 coverage/
 
 # History plugin
-.history/
+.history
 package-lock.json

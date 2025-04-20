@@ -10,4 +10,7 @@ app.get('/', (req, res) => {
   res.send('API running');
 });
 
+app.get("/asd",(req,res)=> {
+  
+})
 module.exports = app;
