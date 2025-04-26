@@ -1,13 +1,25 @@
-const app = require('./app');
-const sequelize = require('./config/database');
+import express from "express"
 
-const PORT = process.env.PORT || 3001;
+import { PORT } from "./config.js";
+import { sequelize } from "./db.js";
 
-sequelize.sync({ alter: true }).then(() => {
-  console.log('SQLite DB connected');
-  app.listen(PORT, () => {
-    console.log(`Server listening on http://localhost:${PORT}`);
-  });
-}).catch((error) => {
-  console.error('DB connection failed:', error);
-});
+import "./models/Games.js"
+
+import gamesRoutes from "./routes/games.routes.js";
+
+const app =express();
+app.use(express.json())
+
+try {
+
+    app.listen(PORT);
+    app.use(gamesRoutes);
+
+    await sequelize.sync();
+
+
+    console.log(`✅ Server listening on http://localhost:${PORT}`);
+} catch (error) {
+    console.log(`There was an error on initialization ❌`, error)
+}
+
