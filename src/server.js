@@ -4,8 +4,10 @@ import { PORT } from "./config.js";
 import { sequelize } from "./db.js";
 
 import "./models/Games.js"
+import "./models/Users.js"
 
 import gamesRoutes from "./routes/games.routes.js";
+import usersRoutes from "./routes/users.routes.js";
 
 const app =express();
 app.use(express.json())
@@ -14,6 +16,7 @@ try {
 
     app.listen(PORT);
     app.use(gamesRoutes);
+    app.use(usersRoutes)
 
     await sequelize.sync();
 

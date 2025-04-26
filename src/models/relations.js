@@ -1,0 +1,1 @@
+// aca vendriamos a poner todo lo que son las relaciones de las tablas si es 1 n || n n
