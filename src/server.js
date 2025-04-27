@@ -1,5 +1,5 @@
 import express from "express"
-
+import cors from "cors"
 import { PORT } from "./config.js";
 import { sequelize } from "./db.js";
 
@@ -12,6 +12,7 @@ import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 
 const app =express();
+app.use(cors());
 app.use(express.json())
 
 try {
