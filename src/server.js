@@ -21,7 +21,7 @@ try {
     app.use(gamesRoutes);
     app.use(usersRoutes)
 
-    await sequelize.sync()
+    await sequelize.sync() // si agregamos { force: true } dentro del sycn limpia la bd
         .then(()=> console.log("DB connect ✅✅✅"))
         .catch(error => console.error("error when synchronizing DB ❌❌❌", error))
 
