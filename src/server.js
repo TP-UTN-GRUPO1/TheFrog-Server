@@ -21,7 +21,9 @@ try {
     app.use(gamesRoutes);
     app.use(usersRoutes)
 
-    await sequelize.sync();
+    await sequelize.sync()
+        .then(()=> console.log("DB connect ✅✅✅"))
+        .catch(error => console.error("error when synchronizing DB ❌❌❌", error))
 
 
     console.log(`✅ Server listening on http://localhost:${PORT}`);
