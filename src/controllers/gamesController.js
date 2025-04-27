@@ -26,3 +26,24 @@ export const getGamesFromDb = async(req,res)=>{
         res.status(500).json({message: "error games not found", error})
     }
 }
+
+export const deleteGame = async(req,res)=> {
+    const {id} = req.params
+    const game = await Game.findByPk(id)
+
+    if (!game)
+        return res.status(400).send({message: "Game not found"})
+
+    await game.destroy();
+    res.send(`game for id: ${id} was destroyed`)
+}
+
+export const findGame =async(req,res) => {
+    const {id} = req.params
+    const game = await Game.findOne({where:{id}})
+
+    if(!game)
+        res.status(400).send({message: "Game not found"})
+
+    res.send(game)
+}
