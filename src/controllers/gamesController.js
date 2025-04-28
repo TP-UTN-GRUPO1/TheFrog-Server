@@ -1,7 +1,7 @@
 import {Game}   from "../models/Games.js";
 
 export const createGames = async (req,res)=>{
-const {nameGame,platform,genre,price,image,developer} = req.body;
+const {nameGame,platform,genre,price,imageUrl,developer,rating} = req.body;
 
 if(!nameGame || !developer)
     return res.status(400).send({message:"nombre y desarrolladora son campos requeridos"})
@@ -11,8 +11,9 @@ const newGame = await Game.create({
     platform,
     genre,
     price,
-    image,
-    developer
+    imageUrl,
+    developer,
+    rating
 })
 res.send(newGame)
 

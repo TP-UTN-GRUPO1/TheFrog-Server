@@ -18,6 +18,7 @@ export const Game = sequelize.define("game",{
     },
     rating: {
         type: DataTypes.INTEGER,
+        allowNull: false,
     },
     genre: {
         type: DataTypes.STRING,
@@ -29,9 +30,12 @@ export const Game = sequelize.define("game",{
     },
     imageUrl: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     available: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     },
     price:{
         type:DataTypes.FLOAT,
