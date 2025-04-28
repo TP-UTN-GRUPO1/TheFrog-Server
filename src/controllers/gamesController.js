@@ -15,7 +15,7 @@ const newGame = await Game.create({
     developer,
     rating
 })
-res.send(newGame)
+res.send(newGame, "Game created")
 
 }
 
