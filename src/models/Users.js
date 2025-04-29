@@ -4,10 +4,15 @@ import { sequelize } from "../db.js";
 
 export const User = sequelize.define("user",{
    
-    dni: {
-        type: DataTypes.INTEGER,
+    id: {
+        type: DataTypes.INTEGER ,
         primaryKey: true,
         allowNull: false,  
+    },
+    dni:{
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique:true,
     },
     name: {
         type: DataTypes.STRING,
@@ -25,7 +30,7 @@ export const User = sequelize.define("user",{
             isEmail: true,
     },
     password: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     rol: {
