@@ -2,9 +2,7 @@ import { Router } from "express";
 import {createGames, getGamesFromDb, deleteGame, findGame} from "../controllers/gamesController.js"
 import { loadGenresAndPlatform } from "../controllers/platformGenresController.js";
 
-
 const router = Router()
-
 
 router.get("/games", getGamesFromDb)
 router.post("/games",createGames)

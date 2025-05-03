@@ -7,6 +7,7 @@ import "./models/Games.js"
 import "./models/Users.js"
 import "./models/Genre.js"
 import "./models/Platform.js"
+import "./controllers/usersController.js"
 
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";

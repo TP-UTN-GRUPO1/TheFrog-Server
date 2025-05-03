@@ -1,26 +1,56 @@
 import { User } from "../models/Users.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const createNewUser = async (req, res) => {
-    const { dni, name, lastName, email, password } = req.body;
+    const { name, email, date, password} = req.body;
 
-    if (!email || !dni || !name || !lastName || !password) {
-        return res.status(400).send({ message: "Ingrese todos los datos requeridos" });
+    const existingUser = await User.findOne({ where: { email } });
+
+    if (existingUser) {
+        return res.status(400).json({ message: "El email ya está registrado" });
     }
 
-    try {
-        const newUser = await User.create({
-            dni,
-            name,
-            lastName,
-            email,
-            password,
-        });
-        
-        console.log("Usuario creado con exito");
-        return res.status(200).send({ message: "Usuario creado con exito", user: newUser });
+    // Hash password
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    } catch (error) {
-        console.error("Error al crear el usuario:", error);
-        return res.status(500).send({ message: "No se pudo crear el usuario", error: error.message });
-    }
+    const newUser = await User.create({
+        name,
+        email,
+        date,
+        password: hashedPassword,
+    });
+
+    res.status(201).json({ id: newUser.id });
 };
+
+export const loginUser = async (req, res) => {
+    const { email, password} = req.body;
+
+    const user = await User.findOne({
+        where: {
+            email
+        }
+    });
+
+    if (!user)
+        return res.status(401).send({message: "Usuario no existente"});
+
+    const comparison = await bcrypt.compare (password, user.password);
+
+    if(!comparison)
+        return res.status(401).send({ message: "Email y/o contraseña incorrecta"});
+
+    //Generate token
+
+    const secretKey = "theFrogGames"; 
+    const token = jwt.sign(
+      { id: user.id, email: user.email, name: user.name },
+      secretKey,
+      { expiresIn: "1h" }
+    );
+
+    return res.json(token)
+}
