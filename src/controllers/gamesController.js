@@ -1,4 +1,6 @@
 import {Game}   from "../models/Games.js";
+//import{Platform} from "../models/Platforms.js"
+//import {Genre} from "../models/Genres.js"
 
 export const createGames = async (req,res)=>{
 const {nameGame,platform,genre,price,imageUrl,developer,rating} = req.body;

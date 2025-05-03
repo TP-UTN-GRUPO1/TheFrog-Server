@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {createGames, getGamesFromDb, deleteGame, findGame} from "../controllers/gamesController.js"
-import { loadGenresAndPlatform } from "../controllers/platformGenresController.js";
+import { loadGenresAndPlatform ,getPlatformsAndGenres} from "../controllers/platformGenresController.js";
 
 const router = Router()
 
@@ -10,6 +10,7 @@ router.post("/addGenresPlatform", loadGenresAndPlatform)
 router.delete("/games/:id", deleteGame)
 router.get("/games/:id",findGame)
 // router.put("/games/:id",)
+ router.get("/platformAndGenres", getPlatformsAndGenres)
 
 
 export default router;

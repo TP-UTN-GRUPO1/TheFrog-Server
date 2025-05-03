@@ -5,6 +5,6 @@ export const data = {
       "Horror", "Stealth", "Music", "Party", "Sandbox", "Survival"
     ],
     platforms: [
-      "PC", "PS4", "PS5", "Xbox One", "Xbox Series X", "Nintendo Switch"
+      "PC", "PS4", "PS5", "Xbox One", "Xbox Series", "Nintendo Switch"
     ]
   };
