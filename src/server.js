@@ -7,7 +7,9 @@ import "./models/Games.js"
 import "./models/Users.js"
 import "./models/Genre.js"
 import "./models/Platform.js"
-import "./controllers/usersController.js"
+import "./models/Roles.js"
+import "./models/relations.js" // importamos las relaciones para que se creen las tablas en la base de datos
+
 
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
