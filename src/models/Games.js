@@ -20,14 +20,7 @@ export const Game = sequelize.define("game",{
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    genre: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    platform: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
+
     imageUrl: {
         type: DataTypes.STRING,
         allowNull: false,
