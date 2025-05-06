@@ -1,6 +1,8 @@
 import { User } from "../models/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { validateEmail, validatePassword} from "../utils/validations.js";
+
 
 export const createNewUser = async (req, res) => {
     const { name, email, date, password} = req.body;
@@ -8,7 +10,7 @@ export const createNewUser = async (req, res) => {
     const existingUser = await User.findOne({ where: { email } });
 
     if (existingUser) {
-        return res.status(400).json({ message: "El email ya está registrado" });
+        return res.status(400).send({ message: "El email ya está registrado" });
     }
 
     // Hash password
@@ -27,6 +29,9 @@ export const createNewUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
+    if (!validateLoginUser(req.body))
+        return res.status(400).send({ message: "Hubo un error en la solicitud" });
+
     const { email, password} = req.body;
 
     const user = await User.findOne({
@@ -53,4 +58,14 @@ export const loginUser = async (req, res) => {
     );
 
     return res.json(token)
+}
+
+
+const validateLoginUser = ({ email, password }) => {
+    if (!validateEmail(email))
+        return false;
+    else if (!validatePassword(password, 6, 20, true, true))
+        return false;
+
+    return true;
 }
