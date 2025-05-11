@@ -13,6 +13,7 @@ import "./models/relations.js";
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
+import { User } from "./models/Users.js";
 
 const app = express();
 app.use(cors());
@@ -28,14 +29,15 @@ mas que nada tmb para mantener un orden , buenas practicas y un clean code , igu
 const startServer = async () => {
   try {
     // Sincronizar la base de datos
-    await sequelize.sync(); // { force: true } para resetear la BD
+    //await User.drop()  // elimina la tabla si existe
+    await sequelize.sync({alter:true}); // { force: true } para resetear la BD
     console.log("DB connect ✅✅✅");
     
-    // Cargar datos iniciales
+    
     await loadGenresAndPlatform();
     console.log("Genres and platforms loaded ✅✅✅");
     
-    // Iniciar servidor
+    
     app.listen(PORT, () => {
       console.log(`✅ Server listening on http://localhost:${PORT}`);
     });
@@ -46,5 +48,5 @@ const startServer = async () => {
   }
 };
 
-// Iniciar la aplicación
+
 startServer();
