@@ -14,6 +14,7 @@ import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
 import { User } from "./models/Users.js";
+import { Game } from "./models/Games.js";
 
 const app = express();
 app.use(cors());
@@ -30,7 +31,8 @@ const startServer = async () => {
   try {
     // Sincronizar la base de datos
     //await User.drop()  // elimina la tabla si existe
-    await sequelize.sync({alter:true}); // { force: true } para resetear la BD
+    //await Game.drop()  // elimina la tabla si existe
+    await sequelize.sync(); // { force: true } para resetear la BD
     console.log("DB connect ✅✅✅");
     
     
