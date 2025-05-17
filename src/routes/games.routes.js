@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {createGames, getGamesFromDb, deleteGame, findGame} from "../controllers/gamesController.js"
+import {createGames, getGamesFromDb, deleteGame, findGame,addGameFromArchive} from "../controllers/gamesController.js"
 import { loadGenresAndPlatform ,getPlatformsAndGenres} from "../controllers/platformGenresController.js";
 
 const router = Router()
@@ -11,6 +11,7 @@ router.delete("/games/:id", deleteGame)
 router.get("/games/:id",findGame)
 // router.put("/games/:id",)
  router.get("/platformAndGenres", getPlatformsAndGenres)
+ router.get("/addGames",addGameFromArchive)
 
 
 export default router;

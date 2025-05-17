@@ -1,93 +1,23 @@
 import { Game } from "../models/Games.js";
 import { Genre } from "../models/Genre.js";
 import { Platform } from "../models/Platform.js";
-
-
-/* export const createGames = async (req, res) => {
-    const { nameGame, platform, genre, price, imageUrl, developer, rating } = req.body;
-
-    if (!nameGame || !developer || !price || !imageUrl || rating === undefined) {
-        return res.status(400).json({ message: "Nombre, desarrolladora, precio, imagen y rating son campos requeridos" });
-    }
-    if (!Number.isInteger(rating) || rating < 0 || rating > 10) {
-        return res.status(400).json({ message: "El rating debe ser un entero entre 0 y 10" });
-    }
-    if (!genre || !Array.isArray(genre) || genre.length === 0) {
-        return res.status(400).json({ message: "Se requiere al menos un género válido" });
-    }
-    if (!platform || !Array.isArray(platform) || platform.length === 0) {
-        return res.status(400).json({ message: "Se requiere al menos una plataforma válida" });
-    }
-    try {
-        
-        const validGenres = await Genre.findAll({
-            where: { genreName: genre }
-        });
-        if (validGenres.length !== genre.length) {
-            const invalidGenres = genre.filter(g => !validGenres.some(vg => vg.genreName === g));
-            return res.status(400).json({ message: `Géneros inválidos: ${invalidGenres.join(", ")}` });
-        }
-
-        
-        const validPlatforms = await Platform.findAll({
-            where: { platformName: platform }
-        });
-        if (validPlatforms.length !== platform.length) {
-            const invalidPlatforms = platform.filter(p => !validPlatforms.some(vp => vp.platformName === p));
-            return res.status(400).json({ message: `Plataformas inválidas: ${invalidPlatforms.join(", ")}` });
-        }
-
-        // Crear el nuevo juego
-        const newGame = await Game.create({
-            nameGame,
-            price,
-            imageUrl,
-            developer,
-            rating,
-            available: true
-        });
-
-     
-        await newGame.setGenres(validGenres);
-        await newGame.setPlatforms(validPlatforms);
-
-      
-
-        
-        const gameWithAssociations = await Game.findByPk(newGame.id, {
-            include: [
-                { model: Genre, through: { attributes: [] } },
-                { model: Platform, through: { attributes: [] } }
-            ]
-        });
-
-        return res.status(201).json({
-            message: "Juego creado exitosamente",
-            game: gameWithAssociations
-        });
-    } catch (error) {
-        console.error("Error al crear el juego:", error);
-        return res.status(500).json({ message: "Error al crear el juego", error: error.message });
-    }
-}; */
+import { dataGames } from "../utils/gamesData.js";
 const img =
   "https://imgs.search.brave.com/qa3D7S-V1de1p9GPk4pmfcCVhAIcntcn2gzOYIP6Cfg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90My5mdGNkbi5uZXQvanBnLzExLzIwLzQxLzU2LzM2MF9GXzExMjA0MTU2NjVfV0hrcXNwVW90NmJiUlRzTGZVRnBKcnhuMXFldFZaVYkuanBn";
 
 export const createGames = async (req, res) => {
   const { nameGame, platforms, genres, price, imageUrl, developer, rating } = req.body;
 
-  // Validar campos requeridos
   if (!nameGame || !price || !developer || !rating || !genres || !platforms) {
-    return res.status(400).json({ message: "Faltan campos requeridos" });
+    return res.status(400).json({ message: "Datos incompletos" });
   }
 
-  // Validar que platforms y genres sean arrays
-  if (!Array.isArray(platforms) || !Array.isArray(genres)) {
-    return res.status(400).json({ message: "Plataformas y géneros deben ser arrays" });
+  if (!Array.isArray(platforms) || !Array.isArray(genres)) { // arrayisarray valida que sea un array
+    return res.status(400).json({ message: "Plataformas y generos deben ser arrays" });
   }
 
   try {
-    // Crear el juego
+  
     const newGame = await Game.create({
       nameGame,
       price,
@@ -97,7 +27,6 @@ export const createGames = async (req, res) => {
       available: true,
     });
 
-    // Buscar plataformas
     const platformsDb = await Platform.findAll({
       where: { platformName: platforms },
     });
@@ -113,7 +42,6 @@ export const createGames = async (req, res) => {
       });
     }
 
-    // Buscar géneros
     const genresDb = await Genre.findAll({
       where: { genreName: genres },
     });
@@ -127,17 +55,28 @@ export const createGames = async (req, res) => {
       });
     }
 
-    // Asociar plataformas y géneros
+
     await newGame.setPlatforms(platformsDb);
     await newGame.setGenres(genresDb);
 
-    // Devolver el juego con sus asociaciones
+
     const gameWithDetails = await Game.findByPk(newGame.id, {
       include: [
-        { model: Platform, attributes: ["platformName"] },
-        { model: Genre, attributes: ["genreName"] },
+        {
+          model: Platform,
+          attributes: ["platformName"], 
+          through: { attributes: [] }, 
+        },
+        {
+          model: Genre,
+          attributes: ["genreName"], 
+          through: { attributes: [] }, 
+        },
       ],
     });
+    if (!gameWithDetails) {
+      return res.status(404).json({ message: "Juego no encontrado" });
+    }
 
     res.status(201).json({ message: "Juego creado exitosamente", game: gameWithDetails });
   } catch (error) {
@@ -150,9 +89,20 @@ export const createGames = async (req, res) => {
 export const getGamesFromDb = async(req,res)=> {
     try {
         const games = await Game.findAll({
-            include: [
-                { model: Platform, as: "platforms" },
-            ],
+          include: [
+            {
+              model: Platform,
+              as: "platforms",
+              attributes: ["platformName"], 
+              through: { attributes: [] }, 
+            },
+            {
+              model: Genre,
+              as: "genres",
+              attributes: ["genreName"], 
+              through: { attributes: [] }, 
+            },
+          ],
         });
         res.status(200).json(games);
     } catch (error) {
@@ -180,3 +130,100 @@ export const findGame =async(req,res) => {
 
     res.send(game)
 }
+//-------------- aca cargamos los juegos que tenemos en el utils
+export const addGameFromArchive = async (res) => {
+  
+  if (!dataGames || !Array.isArray(dataGames) || dataGames.length === 0) {
+    return res.status(400).json({ message: "No se proporcionaron juegos válidos" });
+  }
+
+  try {
+    
+    const requiredFields = ["nameGame", "developer", "rating", "imageUrl", "price", "platform", "genre"];
+    for (const game of dataGames) {
+      for (const field of requiredFields) {
+        if (!game[field]) {
+          return res.status(400).json({ message: `Falta el campo ${field} en un juego` });
+        }
+      }
+      if (!Array.isArray(game.platform) || !Array.isArray(game.genre)) {
+        return res.status(400).json({ message: "Plataformas y géneros deben ser arrays" });
+      }
+    }
+
+    
+    const gamesToCreate = dataGames.map(({ platform, genre, ...rest }) => rest);
+    const createdGames = await Game.bulkCreate(gamesToCreate, {
+      validate: true,
+    });
+
+  
+    for (const game of createdGames) {
+      const gameData = dataGames.find((g) => g.nameGame === game.nameGame); 
+
+      
+      const platformsDb = await Platform.findAll({
+        where: { platformName: gameData.platform },
+      });
+      if (platformsDb.length !== gameData.platform.length) {
+        return res.status(404).json({
+          message: "Algunas plataformas no existen",
+          missing: gameData.platform.filter(
+            (p) => !platformsDb.some((db) => db.platformName === p)
+          ),
+        });
+      }
+
+      
+      const genresDb = await Genre.findAll({
+        where: { genreName: gameData.genre },
+      });
+      if (genresDb.length !== gameData.genre.length) {
+        return res.status(404).json({
+          message: "Algunos géneros no existen",
+          missing: gameData.genres.filter(
+            (g) => !genresDb.some((db) => db.genreName === g)
+          ),
+        });
+      }
+
+      
+      await game.setPlatforms(platformsDb);
+      await game.setGenres(genresDb);
+    }
+
+    
+    const gamesWithDetails = await Game.findAll({
+      where: { id: createdGames.map((g) => g.id) },
+      include: [
+        {
+          model: Platform,
+          as: "platforms",
+          attributes: ["platformName"],
+          through: { attributes: [] },
+        },
+        {
+          model: Genre,
+          as: "genres",
+          attributes: ["genreName"],
+          through: { attributes: [] },
+        },
+      ],
+    });
+
+    
+    const formattedGames = gamesWithDetails.map((game) => ({
+      ...game.toJSON(), //trae todo lo de game y lo convierte a json
+      platforms: game.platforms.map((plt) => plt.platformName),
+      genres: game.genres.map((gen) => gen.genreName),
+    }));
+
+    res.status(201).json({
+      message: "Juegos creados exitosamente",
+      games: formattedGames,
+    });
+  } catch (error) {
+    console.error("Error al crear los juegos:", error);
+    res.status(500).json({ message: "Error al crear los juegos", error: error.message });
+  }
+};

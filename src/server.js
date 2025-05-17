@@ -32,7 +32,7 @@ const startServer = async () => {
     // Sincronizar la base de datos
     //await User.drop()  // elimina la tabla si existe
     //await Game.drop()  // elimina la tabla si existe
-    await sequelize.sync(); // { force: true } para resetear la BD
+    await sequelize.sync(); // { force: true } para resetear la BD alter:true es para modificar tablas
     console.log("DB connect ✅✅✅");
     
     
