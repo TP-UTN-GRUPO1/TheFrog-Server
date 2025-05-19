@@ -1,0 +1,24 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/register
+  body: json
+  auth: inherit
+}
+
+headers {
+  name: martin
+}
+
+body:json {
+  {
+    "name": "Martín",
+    "email": "martin@example.com",
+    "date": "2000-01-01",
+    "password": "contraseñaSegura123"
+  }
+}

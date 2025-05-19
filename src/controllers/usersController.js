@@ -5,6 +5,7 @@ import { validateEmail, validatePassword} from "../utils/validations.js";
 
 
 export const createNewUser = async (req, res) => {
+    console.log("Cuerpo recibido:", req.body);console.log("Cuerpo recibido:", req.body);
     const { name, email, date, password} = req.body;
 
     const existingUser = await User.findOne({ where: { email } });
