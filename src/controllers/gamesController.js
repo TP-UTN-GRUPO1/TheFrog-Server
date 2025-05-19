@@ -123,7 +123,21 @@ export const deleteGame = async(req,res)=> {
 
 export const findGame =async(req,res) => {
     const {id} = req.params
-    const game = await Game.findOne({where:{id}})
+    const game = await Game.findOne({where:{id},   
+      include: [
+      {
+        model: Platform,
+        attributes: ["platformName"], 
+        through: { attributes: [] }, 
+      },
+      {
+        model: Genre,
+        attributes: ["genreName"], 
+        through: { attributes: [] }, 
+      },
+    ],}
+    
+    )
 
     if(!game)
         res.status(400).send({message: "Game not found"})
