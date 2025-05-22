@@ -37,9 +37,9 @@ const startServer = async () => {
     console.log("DB connect ✅✅✅");
     
     
-    await loadGenresAndPlatform();
-    await uploadRolesInDb();
-    console.log("Genres and platforms loaded ✅✅✅");
+    //await loadGenresAndPlatform();
+    //await uploadRolesInDb();
+    //console.log("Genres and platforms loaded ✅✅✅");
     
     
     app.listen(PORT, () => {
