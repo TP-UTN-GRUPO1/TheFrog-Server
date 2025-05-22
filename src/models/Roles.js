@@ -12,6 +12,6 @@ export const Role = sequelize.define("role",{
         type: DataTypes.STRING,
         allowNull: false,
         unique:true,
-        defaultValue: "user",
+        defaultValue:"user",
     }
 }, { timestamps:false })

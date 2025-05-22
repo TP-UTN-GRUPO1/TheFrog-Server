@@ -1,10 +1,10 @@
 import { User } from "../models/Users.js";
+import { Role } from "../models/Roles.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { roles } from "../utils/genrePlatform.js";
 
 export const createNewUser = async (req, res) => {
-  console.log("Cuerpo recibido:", req.body);
-  console.log("Cuerpo recibido:", req.body);
   const { name, email, date, password } = req.body;
 
   const existingUser = await User.findOne({ where: { email } });
@@ -55,3 +55,20 @@ export const loginUser = async (req, res) => {
 
   return res.json(token);
 };
+
+export const uploadRolesInDb = async ()=> {
+  try {
+   
+    for (const roleName of roles.rolesName) {
+      await Role.findOrCreate({
+        where: { roleName: roleName.trim() }
+      });
+    }
+    console.log("Datos cargados exitosamente GG");
+    return true;
+    
+  } catch (error) {
+    console.error("Error al cargar datos iniciales:", error);
+    throw error; 
+  }
+}

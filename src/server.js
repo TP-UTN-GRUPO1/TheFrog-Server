@@ -15,6 +15,7 @@ import usersRoutes from "./routes/users.routes.js";
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
 import { User } from "./models/Users.js";
 import { Game } from "./models/Games.js";
+import { uploadRolesInDb } from "./controllers/usersController.js";
 
 const app = express();
 app.use(cors());
@@ -37,6 +38,7 @@ const startServer = async () => {
     
     
     await loadGenresAndPlatform();
+    await uploadRolesInDb();
     console.log("Genres and platforms loaded ✅✅✅");
     
     

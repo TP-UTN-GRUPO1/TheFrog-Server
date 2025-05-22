@@ -8,3 +8,8 @@ export const data = {
       "PC", "PS4", "PS5", "Xbox One", "Xbox Series", "Nintendo Switch"
     ]
   };
+
+  export const roles ={
+      rolesName: ["sysadmin", "user", "admin"]
+
+  }
