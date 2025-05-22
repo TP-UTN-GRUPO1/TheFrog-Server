@@ -34,6 +34,11 @@ export const loginUser = async (req, res) => {
   if (result.error) return res.status(400).send({ message: result.error });
 };
 
+const isValidDate = (dateString) => {
+  const date = new Date(dateString);
+  return !isNaN(date.getTime());
+};
+
 const validateLoginUser = (req) => {
   const result = {
     error: false,
@@ -51,5 +56,61 @@ const validateLoginUser = (req) => {
       message: "Contraseña invalida",
     };
   }
+  return result;
+};
+
+export const createNewUser = async (req, res) => {
+  const result = validateRegisterUser(req.body);
+
+  if (result.error) return res.status(400).send({ message: result.error });
+};
+
+const validateRegisterUser = (req) => {
+  const result = {
+    error: false,
+    message: "",
+  };
+
+  const { name, email, birthDate, password } = req;
+
+  if (!name || name.trim().length < 3) {
+    return {
+      error: true,
+      message: "El nombre debe tener al menos 3 caracteres.",
+    };
+  }
+
+  if (!email || !validateEmail(email)) {
+    return {
+      error: true,
+      message: "Email inválido.",
+    };
+  }
+
+  if (!birthDate || !isValidDate(birthDate)) {
+    return {
+      error: true,
+      message: "Fecha de nacimiento inválida.",
+    };
+  }
+
+  const isOverMinimumAge = (birthDate, minAge) => {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    const age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    return (
+      age > minAge ||
+      (age === minAge && m >= 0 && today.getDate() >= birth.getDate())
+    );
+  };
+
+  if (!isOverMinimumAge(birthDate, 13)) {
+    return {
+      error: true,
+      message: "Debes tener al menos 13 años para registrarte.",
+    };
+  }
+
   return result;
 };
