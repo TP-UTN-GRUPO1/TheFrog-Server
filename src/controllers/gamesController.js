@@ -241,3 +241,38 @@ export const addGameFromArchive = async (res) => {
     res.status(500).json({ message: "Error al crear los juegos", error: error.message });
   }
 };
+export const getAllGamesOrByName = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    const games = await Game.findAll({
+      include: [
+        {
+          model: Platform,
+          attributes: ["platformName"],
+          through: { attributes: [] },
+        },
+        {
+          model: Genre,
+          attributes: ["genreName"],
+          through: { attributes: [] },
+        },
+      ],
+    });
+
+    if (name) {
+      const filtered = games.filter((g) =>
+        g.nameGame.toLowerCase().includes(name.toLowerCase())
+      );
+
+      return filtered.length
+        ? res.status(200).json(filtered)
+        : res.status(404).json({ message: "Juego no encontrado" });
+    }
+
+    return res.status(200).json(games);
+  } catch (error) {
+    console.error("❌ Error obteniendo juegos:", error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
