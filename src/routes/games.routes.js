@@ -12,6 +12,6 @@ router.get("/games/:id",findGame)
 // router.put("/games/:id",)
  router.get("/platformAndGenres", getPlatformsAndGenres)
  router.get("/addGames",addGameFromArchive)
- router.get("/game", getAllGamesOrByName); // http://localhost:3000/games?name=
+ router.get("/game", getAllGamesOrByName); // http://localhost:3000/game?name=
 
 export default router;
