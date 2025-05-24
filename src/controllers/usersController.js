@@ -72,3 +72,4 @@ export const uploadRolesInDb = async ()=> {
     throw error; 
   }
 }
+/*Hacer funciones que pueda editar , obeter, borrar usuarios */
