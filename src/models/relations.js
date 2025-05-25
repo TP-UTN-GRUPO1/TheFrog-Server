@@ -22,3 +22,7 @@ Cart.belongsTo(User, { foreignKey: 'id_user' });
 
 Cart.belongsToMany(Game, { through: "cart_games", foreignKey: 'idCart', otherKey: 'gameId' });
 Game.belongsToMany(Cart, { through: "cart_games", foreignKey: 'gameId', otherKey: 'idCart' });
+
+User.belongsToMany(Game, { through: "favorites", foreignKey: 'idUser', otherKey: 'gameId' });
+Game.belongsToMany(User, { through: "favorites", foreignKey: 'gameId', otherKey: 'idUser' });
+
