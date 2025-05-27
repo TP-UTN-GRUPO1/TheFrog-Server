@@ -27,5 +27,18 @@ export const User = sequelize.define("user", {
     password: {
         type: DataTypes.TEXT,
         allowNull: false,
-    }
+    },
+    adress:{
+        type:DataTypes.STRING,
+    },
+    country: {
+        type:DataTypes.STRING
+    },
+    province:{
+        type:DataTypes.STRING
+    },
+    city:{
+        type:DataTypes.STRING
+    },
+
 }, { timestamps: true });

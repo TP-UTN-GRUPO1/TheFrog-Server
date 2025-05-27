@@ -363,4 +363,3 @@ export const updateGame = async (req, res) => {
   }
 };
 
-/*Falta crear la funcion para editar los juegos y quizas que por ahi agregar el stock y como controlarlo */
