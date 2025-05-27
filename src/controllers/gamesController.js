@@ -277,4 +277,90 @@ export const getAllGamesOrByName = async (req, res) => {
   }
 };
 
+export const updateGame = async (req, res) => {
+  const { id } = req.params;
+  const { nameGame, platforms, genres, price, imageUrl, developer, rating } = req.body;
+
+  if (!nameGame || !price || !developer || !rating || !genres || !platforms) {
+      return res.status(400).json({ message: "Datos incompletos" });
+  }
+
+  if (!Array.isArray(platforms) || !Array.isArray(genres)) {
+      return res.status(400).json({ message: "Plataformas y géneros deben ser arrays" });
+  }
+
+  try {
+      
+      const game = await Game.findByPk(id);
+      if (!game) {
+          return res.status(404).json({ message: "Juego no encontrado" });
+      }
+
+   
+      await game.update({
+          nameGame,
+          price,
+          imageUrl: imageUrl || game.imageUrl, 
+          developer,
+          rating,
+          available: true,
+      });
+
+      
+      const platformsDb = await Platform.findAll({
+          where: { platformName: platforms },
+      });
+      if (platformsDb.length === 0) {
+          return res.status(404).json({ message: "No se encontraron plataformas" });
+      }
+      if (platformsDb.length !== platforms.length) {
+          return res.status(404).json({
+              message: "Algunas plataformas no existen",
+              missing: platforms.filter(
+                  (p) => !platformsDb.some((db) => db.platformName === p)
+              ),
+          });
+      }
+
+      
+      const genresDb = await Genre.findAll({
+          where: { genreName: genres },
+      });
+      if (genresDb.length === 0) {
+          return res.status(404).json({ message: "No se encontraron géneros" });
+      }
+      if (genresDb.length !== genres.length) {
+          return res.status(404).json({
+              message: "Algunos géneros no existen",
+              missing: genres.filter((g) => !genresDb.some((db) => db.genreName === g)),
+          });
+      }
+
+      
+      await game.setPlatforms(platformsDb);
+      await game.setGenres(genresDb);
+
+      
+      const gameWithDetails = await Game.findByPk(id, {
+          include: [
+              {
+                  model: Platform,
+                  attributes: ["platformName"],
+                  through: { attributes: [] },
+              },
+              {
+                  model: Genre,
+                  attributes: ["genreName"],
+                  through: { attributes: [] },
+              },
+          ],
+      });
+
+      res.status(200).json({ message: "Juego actualizado exitosamente", game: gameWithDetails });
+  } catch (error) {
+      console.error("Error al actualizar el juego:", error);
+      res.status(500).json({ message: "Error al actualizar el juego", error: error.message });
+  }
+};
+
 /*Falta crear la funcion para editar los juegos y quizas que por ahi agregar el stock y como controlarlo */
