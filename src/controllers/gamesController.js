@@ -363,3 +363,6 @@ export const updateGame = async (req, res) => {
   }
 };
 
+export const addFavorites = async(req,res)=> {
+  const {idGame, idUser} = req.body
+}

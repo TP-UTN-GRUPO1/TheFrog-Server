@@ -72,4 +72,9 @@ export const uploadRolesInDb = async ()=> {
     throw error; 
   }
 }
+
+// export const  updateUser = async (req,res)=> {
+// const {email}= req.params
+// const { name,lastName ,country,province, city,adress,date,email } = req.body
+// }
 /*Hacer funciones que pueda editar , obeter, borrar usuarios */
