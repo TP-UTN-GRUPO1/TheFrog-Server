@@ -53,25 +53,23 @@ export const loginUser = async (req, res) => {
     { expiresIn: "1h" }
   );
 
-  return res.json(token);
+  return res.json({ token });
 };
 
-export const uploadRolesInDb = async ()=> {
+export const uploadRolesInDb = async () => {
   try {
-   
     for (const roleName of roles.rolesName) {
       await Role.findOrCreate({
-        where: { roleName: roleName.trim() }
+        where: { roleName: roleName.trim() },
       });
     }
     console.log("Datos cargados exitosamente GG");
     return true;
-    
   } catch (error) {
     console.error("Error al cargar datos iniciales:", error);
-    throw error; 
+    throw error;
   }
-}
+};
 
 // export const  updateUser = async (req,res)=> {
 // const {email}= req.params
