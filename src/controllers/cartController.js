@@ -1,3 +1,8 @@
-/* Aca irian las funciones para controlar todo lo que sea carrito ademas de funciones como MP api*/
+import { Game } from "../models/Games.js";
+import { User } from "../models/Users.js";
 
+export const addCart = async () => {}
 
+export const deleteCart = async () => {}
+
+export const getOrderBuy = async () => {}
