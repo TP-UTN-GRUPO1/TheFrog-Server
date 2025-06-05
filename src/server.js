@@ -12,6 +12,7 @@ import "./models/relations.js";
 
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import favoritesRoutes from "./routes/favorites.routes.js"
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
 import { User } from "./models/Users.js";
 import { Game } from "./models/Games.js";
@@ -24,6 +25,7 @@ app.use(express.json());
 // cofniguracion de rutas
 app.use(gamesRoutes);
 app.use(usersRoutes);
+app.use(favoritesRoutes);
 /*mas que nada aca cuando nos traemos ejemploRoutes lo que haces es traernos todas las rutas /ejemplo y sus metodos para podes utulizarlos
 mas que nada tmb para mantener un orden , buenas practicas y un clean code , igual meter 100 comentarios no se que tan bueno es*/
 
