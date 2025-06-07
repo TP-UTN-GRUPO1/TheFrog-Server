@@ -50,7 +50,10 @@ const validateLoginUser = (req) => {
       error: true,
       message: "Mail invalido",
     };
-  else if (!password || !validatePassword(password, 7, null, true, true)) {
+  else if (
+    !password ||
+    !validatePassword(password, 7, null, true, true, true)
+  ) {
     return {
       error: true,
       message: "Contraseña invalida",

@@ -10,9 +10,10 @@ import "./models/Platform.js";
 import "./models/Roles.js";
 import "./models/relations.js";
 
+import ordersRoutes from "./routes/order.routes.js";
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
-import favoritesRoutes from "./routes/favorites.routes.js"
+import favoritesRoutes from "./routes/favorites.routes.js";
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
 import { User } from "./models/Users.js";
 import { Game } from "./models/Games.js";
@@ -23,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 
 // cofniguracion de rutas
+app.use(ordersRoutes);
 app.use(gamesRoutes);
 app.use(usersRoutes);
 app.use(favoritesRoutes);
@@ -33,9 +35,9 @@ mas que nada tmb para mantener un orden , buenas practicas y un clean code , igu
 const startServer = async () => {
   try {
     // Sincronizar la base de datos
-    //await User.drop(); // elimina la tabla si existe
+    //await User.drop();
     //await Game.drop()  // elimina la tabla si existe
-    //await User.sync({ alter: true }) // actualiza la tabla users;
+    //await User.sync({ alter: true });
     await sequelize.sync(); // { force: true } para resetear la BD alter:true es para modificar tablas
     console.log("DB connect ✅✅✅");
 
