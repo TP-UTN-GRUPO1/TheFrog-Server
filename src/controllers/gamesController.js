@@ -279,7 +279,7 @@ export const getAllGamesOrByName = async (req, res) => {
 
 export const updateGame = async (req, res) => {
   const { id } = req.params;
-  const { nameGame, platforms, genres, price, imageUrl, developer, rating } = req.body;
+  const { nameGame, platforms, genres, price, imageUrl, developer, rating, available } = req.body;
 
   if (!nameGame || !price || !developer || !rating || !genres || !platforms) {
       return res.status(400).json({ message: "Datos incompletos" });
@@ -303,7 +303,7 @@ export const updateGame = async (req, res) => {
           imageUrl: imageUrl || game.imageUrl, 
           developer,
           rating,
-          available: true,
+          available: available !== undefined ? available : game.available,
       });
 
       
