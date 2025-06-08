@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db.js";
+import { Role } from "./Roles.js";
 
 export const User = sequelize.define(
   "user",
@@ -17,7 +18,6 @@ export const User = sequelize.define(
     lastName: {
       type: DataTypes.STRING,
     },
-
     email: {
       type: DataTypes.STRING,
       unique: true,
@@ -45,6 +45,13 @@ export const User = sequelize.define(
     },
     city: {
       type: DataTypes.STRING,
+    },
+    roleId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Role,
+        key: "idRole",
+      },
     },
   },
   { timestamps: true }

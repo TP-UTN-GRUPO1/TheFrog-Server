@@ -9,7 +9,10 @@ import "./models/Genre.js";
 import "./models/Platform.js";
 import "./models/Roles.js";
 import "./models/relations.js";
+import "./models/OrderItem.js";
+import "./models/Order.js";
 
+import { addGameFromArchive } from "./controllers/gamesController.js";
 import ordersRoutes from "./routes/order.routes.js";
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
@@ -38,12 +41,18 @@ const startServer = async () => {
     //await User.drop();
     //await Game.drop()  // elimina la tabla si existe
     //await User.sync({ alter: true });
-    await sequelize.sync(); // { force: true } para resetear la BD alter:true es para modificar tablas
+    await sequelize.sync({ force: true });
+    //  { force: true } para resetear la BD alter:true es para modificar tablas
     console.log("DB connect ✅✅✅");
-
-    //await loadGenresAndPlatform();
-    //await uploadRolesInDb();
-    //console.log("Genres and platforms loaded ✅✅✅");
+    await addGameFromArchive({
+      status: (code) => ({
+        json: (body) =>
+          console.log(`Carga inicial juegos (${code}):`, body.message || body),
+      }),
+    });
+    await loadGenresAndPlatform();
+    await uploadRolesInDb();
+    console.log("Genres and platforms loaded ✅✅✅");
 
     app.listen(PORT, () => {
       console.log(`✅ Server listening on http://localhost:${PORT}`);

@@ -13,16 +13,22 @@ export const createNewUser = async (req, res) => {
     return res.status(400).send({ message: "El email ya está registrado" });
   }
 
-  // Hash password
   const saltRounds = 10;
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(password, salt);
+
+  const userRole = await Role.findOne({ where: { roleName: "user" } });
+
+  if (!userRole) {
+    return res.status(500).send({ message: "Rol por defecto no encontrado" });
+  }
 
   const newUser = await User.create({
     name,
     email,
     date,
     password: hashedPassword,
+    roleId: userRole.idRole, // 👈 asignación correcta
   });
 
   res.status(201).json({ id: newUser.id });
@@ -53,7 +59,14 @@ export const loginUser = async (req, res) => {
     { expiresIn: "1h" }
   );
 
-  return res.json({ token });
+  res.json({
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+  });
 };
 
 export const uploadRolesInDb = async () => {
