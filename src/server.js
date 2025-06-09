@@ -44,13 +44,13 @@ const startServer = async () => {
     await sequelize.sync({ force: true });
     //  { force: true } para resetear la BD alter:true es para modificar tablas
     console.log("DB connect ✅✅✅");
+    await loadGenresAndPlatform();
     await addGameFromArchive({
       status: (code) => ({
         json: (body) =>
           console.log(`Carga inicial juegos (${code}):`, body.message || body),
       }),
     });
-    await loadGenresAndPlatform();
     await uploadRolesInDb();
     console.log("Genres and platforms loaded ✅✅✅");
 
