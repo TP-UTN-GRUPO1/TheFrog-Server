@@ -3,6 +3,9 @@ import { Role } from "../models/Roles.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { roles } from "../utils/genrePlatform.js";
+import { Order } from "../models/Order.js";
+import { OrderItem } from "../models/OrderItem.js";
+import { Game } from "../models/Games.js";
 
 export const createNewUser = async (req, res) => {
   const { name, email, date, password } = req.body;
@@ -84,6 +87,28 @@ export const uploadRolesInDb = async () => {
   }
 };
 
+export const purchaseHistory = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const orders = await Order.findAll({
+      where: { userId },
+      include: [
+        {
+          model: OrderItem,
+          as: "orderItems",
+          include: [{ model: Game, as: "game" }],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(orders);
+  } catch (error) {
+    console.error("Error al obtener órdenes:", error);
+    res.status(500).json({ error: "Error al obtener órdenes" });
+  }
+};
 // export const  updateUser = async (req,res)=> {
 // const {email}= req.params
 // const { name,lastName ,country,province, city,adress,date,email } = req.body
