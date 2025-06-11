@@ -31,7 +31,7 @@ export const createNewUser = async (req, res) => {
     email,
     date,
     password: hashedPassword,
-    roleId: userRole.idRole, // 👈 asignación correcta
+    roleId: userRole.idRole, 
   });
 
   res.status(201).json({ id: newUser.id });
@@ -136,8 +136,3 @@ export const deleteUser = async(req,res)=> {
   await user.destroy();
   res.send(`user for id: ${id} was destroyed`)
 }
-// export const  updateUser = async (req,res)=> {
-// const {email}= req.params
-// const { name,lastName ,country,province, city,adress,date,email } = req.body
-// }
-/*Hacer funciones que pueda editar , obeter, borrar usuarios */
