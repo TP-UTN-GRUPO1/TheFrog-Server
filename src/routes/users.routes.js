@@ -4,17 +4,17 @@ import {
   createNewUser,
   purchaseHistory,
   getUserFromDb,
-  deleteUser
+  deleteUser,updateUserRole
 } from "../controllers/usersController.js";
 import { authenticate } from "../middleware/authenticate.js";
 import { authorize } from "../middleware/authorize.js";
 const router = Router();
 
-router.get("/users", authenticate, authorize("sysadmin"),getUserFromDb)
-router.get("/orders/user/:userId",authenticate, authorize("sysadmin","admin"), purchaseHistory);
+router.get("/users" ,getUserFromDb)
+router.get("/orders/user/:userId", purchaseHistory);
 router.post("/register", createNewUser);
 router.post("/login", loginUser);
-router.delete("/user/:id", authenticate, authorize("sysadmin","admin"),deleteUser)
-//router.put("/user", editUser);
+router.delete("/user/:id",deleteUser)
+router.put("/users/:id/role", updateUserRole);
 //router.get("/user/:id", gerUserForId)
 export default router;

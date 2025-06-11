@@ -136,3 +136,22 @@ export const deleteUser = async(req,res)=> {
   await user.destroy();
   res.send(`user for id: ${id} was destroyed`)
 }
+export const updateUserRole = async (req, res) => {
+  const { id } = req.params;
+  const { roleName } = req.body;
+
+  try {
+    const role = await Role.findOne({ where: { roleName } });
+    if (!role) return res.status(404).send({ message: "Rol no válido" });
+
+    const user = await User.findByPk(id);
+    if (!user) return res.status(404).send({ message: "Usuario no encontrado" });
+
+    user.roleId = role.idRole;
+    await user.save();
+
+    res.status(200).json({ message: "Rol actualizado correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el rol", error });
+  }
+};
