@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { createGames,  getGamesFromDb,deleteGame,findGame,addGameFromArchive  ,getAllGamesOrByName,updateGame} from "../controllers/gamesController.js";
 import {loadGenresAndPlatform,getPlatformsAndGenres} from "../controllers/platformGenresController.js";
-import { authenticate } from "../middlewares/authenticate.js";
-import { authorize } from "../middlewares/authorize.js";
+import { authenticate } from "../middleware/authenticate.js";
+import { authorize } from "../middleware/authorize.js";
 
 const router = Router();
 
