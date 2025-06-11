@@ -109,6 +109,33 @@ export const purchaseHistory = async (req, res) => {
     res.status(500).json({ error: "Error al obtener órdenes" });
   }
 };
+
+export const getUserFromDb = async (req,res) => {
+      try {
+          const users = await User.findAll({
+            include: [
+              {
+                model: Role,
+                attributes: ["roleName"], 
+                
+              }, ],
+            });
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({ message: "error users not found", error });
+        }
+}
+
+export const deleteUser = async(req,res)=> {
+  const {id} = req.params
+  const user = await User.findByPk(id)
+
+  if (!user)
+      return res.status(400).send({message: "user not found"})
+
+  await user.destroy();
+  res.send(`user for id: ${id} was destroyed`)
+}
 // export const  updateUser = async (req,res)=> {
 // const {email}= req.params
 // const { name,lastName ,country,province, city,adress,date,email } = req.body

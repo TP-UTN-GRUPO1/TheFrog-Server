@@ -3,15 +3,17 @@ import {
   loginUser,
   createNewUser,
   purchaseHistory,
+  getUserFromDb,
+  deleteUser
 } from "../controllers/usersController.js";
 
 const router = Router();
 
+router.get("/users", getUserFromDb)
+router.get("/orders/user/:userId", purchaseHistory);
 router.post("/register", createNewUser);
 router.post("/login", loginUser);
-router.get("/orders/user/:userId", purchaseHistory);
+router.delete("/user/:id", deleteUser)
 //router.put("/user", editUser);
-//router.delete("/user/:id", deleteUser)
-//router.get("/users", getUsers)
 //router.get("/user/:id", gerUserForId)
 export default router;
