@@ -3,13 +3,7 @@ import { User } from "../models/Users.js";
 import { Role } from "../models/Roles.js";
 
 export const authenticate = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Falta token" });
-  }
-
-  const token = authHeader.split(" ")[1];
+ 
   try {
     const decoded = jwt.verify(token, "theFrogGames");
 
@@ -25,3 +19,4 @@ export const authenticate = async (req, res, next) => {
     return res.status(401).json({ message: "Token inválido", error: err });
   }
 };
+ 
