@@ -53,3 +53,27 @@ export const createOrder = async (req, res) => {
     return res.status(status).json({ message: error.message });
   }
 };
+
+// routes/orders.js (por ejemplo)
+
+export const historialUserBuy = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const orders = await Order.findAll({
+      where: { userId },
+      include: [
+        {
+          model: OrderItem,
+          include: [Game],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(orders);
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
