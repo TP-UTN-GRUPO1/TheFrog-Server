@@ -31,7 +31,7 @@ export const createNewUser = async (req, res) => {
     email,
     date,
     password: hashedPassword,
-    roleId: userRole.idRole, 
+    roleId: userRole.idRole,
   });
 
   res.status(201).json({ id: newUser.id });
@@ -53,11 +53,9 @@ export const loginUser = async (req, res) => {
   if (!comparison)
     return res.status(401).send({ message: "Email y/o contraseña incorrecta" });
 
-  //Generate token
-
   const secretKey = "theFrogGames";
   const token = jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
+    { id: user.id, email: user.email, name: user.name, roleId: user.roleId },
     secretKey,
     { expiresIn: "1h" }
   );
@@ -68,6 +66,7 @@ export const loginUser = async (req, res) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      roleId: user.roleId,
     },
   });
 };
@@ -110,32 +109,31 @@ export const purchaseHistory = async (req, res) => {
   }
 };
 
-export const getUserFromDb = async (req,res) => {
-      try {
-          const users = await User.findAll({
-            include: [
-              {
-                model: Role,
-                attributes: ["roleName"], 
-                
-              }, ],
-            });
-            res.status(200).json(users);
-        } catch (error) {
-            res.status(500).json({ message: "error users not found", error });
-        }
-}
+export const getUserFromDb = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      include: [
+        {
+          model: Role,
+          attributes: ["roleName"],
+        },
+      ],
+    });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "error users not found", error });
+  }
+};
 
-export const deleteUser = async(req,res)=> {
-  const {id} = req.params
-  const user = await User.findByPk(id)
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByPk(id);
 
-  if (!user)
-      return res.status(400).send({message: "user not found"})
+  if (!user) return res.status(400).send({ message: "user not found" });
 
   await user.destroy();
-  res.send(`user for id: ${id} was destroyed`)
-}
+  res.send(`user for id: ${id} was destroyed`);
+};
 export const updateUserRole = async (req, res) => {
   const { id } = req.params;
   const { roleName } = req.body;
@@ -145,7 +143,8 @@ export const updateUserRole = async (req, res) => {
     if (!role) return res.status(404).send({ message: "Rol no válido" });
 
     const user = await User.findByPk(id);
-    if (!user) return res.status(404).send({ message: "Usuario no encontrado" });
+    if (!user)
+      return res.status(404).send({ message: "Usuario no encontrado" });
 
     user.roleId = role.idRole;
     await user.save();
@@ -153,5 +152,26 @@ export const updateUserRole = async (req, res) => {
     res.status(200).json({ message: "Rol actualizado correctamente" });
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar el rol", error });
+  }
+};
+
+export const updateAccount = async (req, res) => {
+  const { id, address, lastName, city, province, country } = req.body;
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+
+    user.address = address;
+    user.lastName = lastName;
+    user.city = city;
+    user.province = province;
+    user.country = country;
+    await user.save();
+
+    res.status(200).json({ message: "Cuenta actualizada correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar la cuenta", error });
   }
 };

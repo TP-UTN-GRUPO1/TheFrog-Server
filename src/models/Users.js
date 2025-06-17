@@ -34,7 +34,7 @@ export const User = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    adress: {
+    address: {
       type: DataTypes.STRING,
     },
     country: {
