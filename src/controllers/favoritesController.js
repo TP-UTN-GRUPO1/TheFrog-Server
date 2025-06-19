@@ -28,10 +28,11 @@ export const addFavorites = async (req, res) => {
 
         return res.status(201).json({ message: "Juego agregado a favoritos" });
 
-
-    } catch (error) {
-        return res.status(500).json({ message: "Error de servidor" })
-    }
+      } catch (error) {
+        console.error("Error:", error); 
+        return res.status(500).json({ message: "Error del servidor", error: error.message });
+      }
+      
 
 
 
