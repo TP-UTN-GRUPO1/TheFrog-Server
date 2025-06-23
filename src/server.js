@@ -19,6 +19,7 @@ import { loadGenresAndPlatform } from "./controllers/platformGenresController.js
 import { User } from "./models/Users.js";
 import { Game } from "./models/Games.js";
 import { uploadRolesInDb } from "./controllers/usersController.js";
+import { addGameFromArchive } from "./controllers/gamesController.js";
 import ordersRoutes from "./routes/order.routes.js";
 import platformsRoutes from "./routes/platform.routes.js";
 
@@ -38,9 +39,10 @@ const startServer = async () => {
     await sequelize.sync(); // { force: true } para resetear la BD alter:true es para modificar tablas
     console.log("DB connect ✅✅✅");
 
-    //await loadGenresAndPlatform();
-    //await uploadRolesInDb();
-    //console.log("Genres and platforms loaded ✅✅✅");
+    // await loadGenresAndPlatform();
+    // await uploadRolesInDb();
+    // await addGameFromArchive();
+    // console.log("Genres and platforms loaded ✅✅✅");
 
     app.listen(PORT, () => {
       console.log(`✅ Server listening on http://localhost:${PORT}/games`);

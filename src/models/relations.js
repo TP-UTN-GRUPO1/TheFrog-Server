@@ -10,27 +10,43 @@ import { Order } from "./Order.js";
 Role.hasMany(User, { foreignKey: "roleId" });
 User.belongsTo(Role, { foreignKey: "roleId" });
 
-Game.belongsToMany(Genre, { through: "game_genre", foreignKey: "gameId" }); // un juego puede tener muchos generos y un genero puede tener muchos juegos
-Genre.belongsToMany(Game, { through: "game_genre", foreignKey: "genreId" }); // un genero puede tener muchos juegos y un juego puede tener muchos generos
+Game.belongsToMany(Genre, {
+  through: "game_genre",
+  foreignKey: "gameId",
+  otherKey: "genreId",
+  onDelete: "CASCADE",
+});
+Genre.belongsToMany(Game, {
+  through: "game_genre",
+  foreignKey: "genreId",
+  otherKey: "gameId",
+  onDelete: "CASCADE",
+});
 
 Game.belongsToMany(Platform, {
   through: "game_platform",
   foreignKey: "gameId",
+  otherKey: "platformId",
+  onDelete: "CASCADE",
 });
 Platform.belongsToMany(Game, {
   through: "game_platform",
   foreignKey: "platformId",
+  otherKey: "gameId",
+  onDelete: "CASCADE",
 });
 
 User.belongsToMany(Game, {
   through: "favorites",
   foreignKey: "idUser",
   otherKey: "gameId",
+  onDelete: "CASCADE",
 });
 Game.belongsToMany(User, {
   through: "favorites",
   foreignKey: "gameId",
   otherKey: "idUser",
+  onDelete: "CASCADE",
 });
 
 User.hasMany(Order, { foreignKey: "userId" });
