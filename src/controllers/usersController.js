@@ -6,7 +6,7 @@ import { roles } from "../utils/genrePlatform.js";
 import { Order } from "../models/Order.js";
 import { OrderItem } from "../models/OrderItem.js";
 import { Game } from "../models/Games.js";
-
+import { sequelize } from "../db.js";
 export const createNewUser = async (req, res) => {
   const { name, email, date, password } = req.body;
 
@@ -127,12 +127,58 @@ export const getUserFromDb = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findByPk(id);
+  const transaction = await sequelize.transaction();
 
-  if (!user) return res.status(400).send({ message: "user not found" });
+  try {
+    
+    const user = await User.findByPk(id, { transaction });
+    if (!user) {
+      await transaction.rollback();
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  await user.destroy();
-  res.send(`user for id: ${id} was destroyed`);
+    
+    await sequelize.models.favorites.destroy({
+      where: { idUser: id },
+      transaction
+    });
+
+    
+    const orders = await Order.findAll({
+      where: { userId: id },
+      include: [OrderItem],
+      transaction
+    });
+
+    
+    for (const order of orders) {
+      await OrderItem.destroy({
+        where: { orderId: order.orderId },
+        transaction
+      });
+      await order.destroy({ transaction });
+    }
+
+    
+    await user.destroy({ transaction });
+
+    
+    await transaction.commit();
+
+    res.status(200).json({
+      success: true,
+      message: `User ${id} deleted successfully with all related data`
+    });
+
+  } catch (error) {
+    await transaction.rollback();
+    console.error('Error deleting user:', error);
+    res.status(500).json({
+      success: false,
+      message: "Error deleting user",
+      error: error.message
+    });
+  }
 };
 export const updateUserRole = async (req, res) => {
   const { id } = req.params;
