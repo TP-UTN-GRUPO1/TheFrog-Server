@@ -14,14 +14,13 @@ import "./models/Order.js";
 
 import gamesRoutes from "./routes/games.routes.js";
 import usersRoutes from "./routes/users.routes.js";
-import favoritesRoutes from "./routes/favorites.routes.js"
+import favoritesRoutes from "./routes/favorites.routes.js";
 import { loadGenresAndPlatform } from "./controllers/platformGenresController.js";
 import { User } from "./models/Users.js";
 import { Game } from "./models/Games.js";
 import { uploadRolesInDb } from "./controllers/usersController.js";
 import ordersRoutes from "./routes/order.routes.js";
-
-
+import platformsRoutes from "./routes/platform.routes.js";
 
 const app = express();
 app.use(cors());
@@ -32,6 +31,7 @@ app.use(ordersRoutes);
 app.use(gamesRoutes);
 app.use(usersRoutes);
 app.use(favoritesRoutes);
+app.use(platformsRoutes);
 
 const startServer = async () => {
   try {
