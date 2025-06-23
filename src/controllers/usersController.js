@@ -175,3 +175,23 @@ export const updateAccount = async (req, res) => {
     res.status(500).json({ message: "Error al actualizar la cuenta", error });
   }
 };
+
+export const getAccount = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByPk(id);
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+
+    res.json({
+      address: user.address,
+      lastName: user.lastName,
+      city: user.city,
+      province: user.province,
+      country: user.country,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al cargar cuenta" });
+  }
+};
