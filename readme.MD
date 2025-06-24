@@ -1,104 +1,124 @@
-# 🛍️ Documentación del Sitio Web - The Frog Games
 
-## 📌 Descripción General
+# 🐸 The Frog Games - Backend
 
-Este proyecto es un sitio web de e-commerce para la venta de productos digitales, como juegos de PS4, PS5 y Xbox. El sitio permite a los usuarios navegar por el catálogo, gestionar un carrito de compras, realizar pedidos y que los administradores gestionen productos y ventas.
+Backend desarrollado para una tienda digital de videojuegos que permite a usuarios explorar, comprar y gestionar productos, y a administradores controlar ventas y catálogos. El sistema incluye autenticación con JWT, pagos con MercadoPago y persistencia con SQLite mediante Sequelize.
 
 ---
 
-## ⚙️ Funcionalidades
+## ⚙️ Funcionalidades Principales
 
-### 👤 Usuario (Cliente)
-- Registro e inicio de sesión (Auth0).
-- Navegación por catálogo de productos.
-- Filtros por plataforma/categoría.
-- Vista detallada del producto.
-- Agregar y quitar productos del carrito.
-- Finalizar compra (MercadoPago).
-- Ver historial de pedidos.
+### 👥 Usuarios
+- Registro e inicio de sesión con JWT.
+- Roles de acceso: `user` , `admin` y `sysadmin`.
+- CRUD de usuarios (Admin).
+- Protección de rutas mediante middleware JWT.
 
-### 🧑‍💼 Usuario Administrador
-- Panel de administración.
-- Crear, editar y eliminar productos.
-- Ver lista de pedidos y usuarios.
-- Subida de imágenes de productos (Cloudinary, opcional).
-- Visualización de estadísticas de ventas.
+### 🎮 Juegos
+- Crear, editar, eliminar y listar juegos.
+- Asociar juegos con plataformas y géneros.
+- Filtrar por nombre o género.
+
+### 🛒 Compras
+- Crear órdenes de compra.
+- Listar historial de compras por usuario.
+
+
+### 📊 Administración
+- CRUD de juegos, usuarios y plataformas.
+- Visualización de compras.
+- Panel de administración .
 
 ---
 
 ## 🧱 Tecnologías Utilizadas
 
-- **Backend**: Node.js + Express  
-- **Base de datos**: SQLite  
-- **Frontend**: React  
-- **Estilos**: A elección (ej. TailwindCSS, Bootstrap o Material UI)  
-- **Autenticación**: Auth0  
-- **Pasarela de pagos**: API de MercadoPago  
-- **Gestión de imágenes**: Cloudinary (opcional)
+| Categoría         | Herramientas                           |
+|-------------------|----------------------------------------|
+| Lenguaje          | JavaScript (ESModules)                 |
+| Servidor          | Node.js + Express                      |
+| Base de datos     | SQLite + Sequelize ORM                 |
+| Autenticación     | JWT + Bcrypt                           |
+| Logging           | Morgan                                 |
+| Variables Entorno | Dotenv                                 |
+| Testing & Dev     | Nodemon (dev)                          |
 
 ---
 
-## 🗃️ Modelo de Datos (Entidades Principales)
+## 📁 Estructura de Proyecto
 
-### 👤 Usuario
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| id_usuario | INTEGER (PK) | Identificador único |
-| nombre | TEXT | Nombre del usuario |
-| email | TEXT | Correo electrónico |
-| contraseña | TEXT | Hasheada (si no se usa Auth0 directamente) |
-| rol | TEXT | 'cliente' o 'admin' |
-
----
-
-### 🎮 Producto
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| id_producto | INTEGER (PK) | Identificador único |
-| nombre | TEXT | Nombre del producto |
-| descripcion | TEXT | Descripción detallada |
-| precio | REAL | Precio |
-| plataforma | TEXT | PS4, PS5, Xbox |
-| stock | INTEGER | Cantidad disponible |
-| imagen_url | TEXT | URL de la imagen (opcional con Cloudinary) |
+```
+/TheFrog-Server
+├── src/
+│   ├── controllers/     # Lógica de negocio
+│   ├── middlewares/     # JWT, errores, etc.
+│   ├── models/          # Definición de tablas y relaciones
+│   ├── routes/          # Endpoints agrupados por recurso
+│   ├── utils/           # Funciones auxiliares
+│   └── db.js            # Configuracion Sqlite3
+│   └── server.js        # Punto de entrada principal
+│   └── config.js        # Configuracion puerto localhost
+├── videogames.db        # Base de datos SQLite
+├── package.json         # Dependencias y scripts
+```
 
 ---
 
-### 🛒 Detalle_Carrito
-| Campo | Tipo | Descripción |
-|-------|------|-------------|
-| id_usuario | INTEGER (FK) | Usuario dueño del carrito |
-| id_producto | INTEGER (FK) | Producto agregado |
-| cantidad | INTEGER | Cantidad agregada |
+## 🛠️ Instalación y Ejecución
 
-> 🔁 Esta entidad representa el carrito actual de cada usuario. Se pueden hacer consultas para saber qué productos tiene cada usuario en su carrito y cuántos.
-
-
-
-## 📷 Cloudinary (opcional)
-
-Cloudinary se puede usar para subir imágenes desde el panel de administrador, guardando solo la URL en la base de datos. Esto permite un manejo más dinámico de medios y optimización automática.
-
----
-
-## 💳 Integración con MercadoPago
-
-Se utilizará la API de MercadoPago para generar pagos, manejar notificaciones de estados de pago y validar transacciones exitosas o fallidas.
-
----
-
-## 🔐 Auth0
-
-Auth0 se encargará del sistema de autenticación y autorización, gestionando usuarios, roles y tokens de acceso de forma segura.
-
----
-
-## 🗂️ Estructura General
-
+1. **Clonar el repositorio**
 ```bash
-/cliente     # Frontend en React
-/backend     # Backend con Express
-  ├── controllers/
-  ├── routes/
-  ├── models/
-  └── database.sqlite
+git clone https://github.com/TP-UTN-GRUPO1/TheFrog-Server.git
+cd TheFrog-Server
+```
+
+2. **Instalar dependencias**
+```bash
+npm install
+```
+
+3. **Iniciar servidor**
+```bash
+npm run dev     # Con recarga automática (nodemon)
+```
+
+---
+
+## 📄 Endpoints Destacados
+
+### Auth
+- `POST /register` – Registro de usuario
+- `POST /login` – Login y generación de token
+
+### Juegos
+- `GET /games` – Lista de juegos
+- `POST /games` – Crear nuevo juego (Admin o Sysadmin, requiere token)
+- `GET /games/:id` – Detalle de juego
+
+### Usuarios
+- `GET /users` – Listado de usuarios (Admin, requiere token)
+- `DELETE /user/:id` – Eliminar usuario (Admin, requiere token)
+
+### Órdenes
+- `POST /orders` – Crear compra
+- `GET /orders/user/:userId` – Órdenes de un usuario
+
+### Plataformas
+- `GET /platforms` – Lista de plataformas
+- `POST /platforms` – Crear nueva plataforma
+
+### Favoritos
+- `POST /favorites` – Añadir juego a favoritos
+- `GET /favorites/:id` – Obtener favoritos de un usuario
+
+---
+
+## 🔒 Autenticación con JWT
+
+- Los usuarios reciben un token al iniciar sesión.
+- Este token debe ser enviado en el header:  
+  `Authorization: Bearer <token>`
+- Las rutas protegidas están filtradas por el middleware `verifyToken`.
+
+---
+
+
